@@ -40,7 +40,7 @@ public class Parser {
         parsedRows[i] = parsedRows[i].substring(end+2);
         cellIndex++;
       }
-      result[i][cellIndex] = parsedRows[i].substring(0,parsedRows[i].length()-2);
+      result[i][cellIndex] = parsedRows[i].substring(0,parsedRows[i].length()-1);
     }
 
     return result;

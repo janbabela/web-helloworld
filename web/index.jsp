@@ -37,7 +37,9 @@
             $("#testdiv").text(response);
           }
         );
-
+        $.get("testing", function (responseText) {   // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response text...
+          $("#testing").text(responseText);// Locate HTML DOM element with ID "somediv" and set its text content with the response text.
+        });
       }
     </script>
   </head>
@@ -725,7 +727,7 @@
     </table>
   </div>
   <div id="somediv">first</div>
-  <div id="positiondiv"><textarea id="testdiv" rows="10" cols="30"></textarea></div>
+  <div id="positiondiv"><textarea id="testdiv" rows="20" cols="80"></textarea></div>
   <div id="position" hidden></div>
   </body>
 </html>

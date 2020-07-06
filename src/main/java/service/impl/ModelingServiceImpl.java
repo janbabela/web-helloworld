@@ -2,8 +2,12 @@ package service.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import model.CurrentPosition;
 import model.PositionModel;
 import service.ModelingService;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,182 +17,164 @@ public class ModelingServiceImpl implements ModelingService {
 
   String[][] positionMatrix = new String[25][25];
 
+  ModelingUtilsImpl modelingUtils = new ModelingUtilsImpl();
+
   private final static String ROW = "row";
   private final static String COLUMN = "column";
   private final static String FIRST_DIAGONAL = "firstDiagonal";
   private final static String SECOND_DIAGONAL = "secondDiagonal";
+  private List<String> positionTypes = Arrays.asList(ROW, COLUMN, FIRST_DIAGONAL, SECOND_DIAGONAL);
+  
+  private final static String EMPTY = "&nbsp;";
 
   @Override
   public void describePosition(String[][] positionMatrix) {
 
     this.positionMatrix = positionMatrix;
+    modelingUtils.positionMatrix = positionMatrix;
     positionModel = new PositionModel();
-    countDoubles();
+    countPatterns();
   }
 
-  private void countDoubles() {
-
-    countDoublesForPlayer( "X");
-    countDoublesForPlayer( "O");
-  }
-
-  private void countDoublesForPlayer(String playerChar) {
-
-    countDoublesForPlayerForPositionType(playerChar, ROW);
-    countDoublesForPlayerForPositionType(playerChar, COLUMN);
-    countDoublesForPlayerForPositionType(playerChar, FIRST_DIAGONAL);
-    countDoublesForPlayerForPositionType(playerChar, SECOND_DIAGONAL);
-  }
-
-  private void countDoublesForPlayerForPositionType(String playerChar, String positionType) {
+  private void countPatterns() {
 
     for (int rowIndex=0; rowIndex<25; rowIndex++) {
-      for (int columnIndex=0; columnIndex<25; columnIndex++) {
-        if ( checkDouble(rowIndex, columnIndex, positionType, playerChar) & !checkTriple(rowIndex, columnIndex, positionType, playerChar)
-                & !checkInsideTriple(rowIndex, columnIndex, positionType, playerChar)) {
-        // double found, now what is type of double
-          if ( checkEmptyFields(rowIndex, columnIndex, positionType, 2,3, 3 )) {
-          // open double
-            positionModel.addOpenDoublesByPlayer(playerChar);
-          }
-          else if (checkEmptyFields(rowIndex, columnIndex, positionType, 2,2, 2 )) {
-          // mostly open double
-            positionModel.addMostlyOpenDoublesByPlayer(playerChar);
-          }
-          else {
-            if (checkEmptyFields(rowIndex, columnIndex, positionType, 2,1, 2 ) ||
-                checkEmptyFields(rowIndex, columnIndex, positionType, 2,2, 1 ) ||
-                checkEmptyFields(rowIndex, columnIndex, positionType, 2,0, 3 ) ||
-                checkEmptyFields(rowIndex, columnIndex, positionType, 2,3, 0 )) {
-            // half open double
-            positionModel.addHalfDoublesByPlayer(playerChar);
-            }
-          }
-        }
+      for (int columnIndex = 0; columnIndex < 25; columnIndex++) {
+        CurrentPosition currentPosition = new CurrentPosition(rowIndex, columnIndex);
+        positionTypes.forEach(t -> checkDoubleForPositionForPlayerForPositionType(currentPosition, "O", t) );
+        positionTypes.forEach(t -> checkDisconnectedDoubleForPositionForPlayerForPositionType(currentPosition, "O", t) );
+        positionTypes.forEach(t -> checkDoubleForPositionForPlayerForPositionType(currentPosition, "X", t) );
+        positionTypes.forEach(t -> checkDisconnectedDoubleForPositionForPlayerForPositionType(currentPosition, "X", t) );
+        positionTypes.forEach(t -> checkTripleForPositionForPlayerForPositionType(currentPosition, "O", t) );
+        positionTypes.forEach(t -> checkDisconnectedTripleForPositionForPlayerForPositionType(currentPosition, "O", t) );
+        positionTypes.forEach(t -> checkTripleForPositionForPlayerForPositionType(currentPosition, "X", t) );
+        positionTypes.forEach(t -> checkDisconnectedTripleForPositionForPlayerForPositionType(currentPosition, "X", t) );
+        positionTypes.forEach(t -> checkQuadrupleForPositionForPlayerForPositionType(currentPosition, "O", t) );
+        positionTypes.forEach(t -> checkQuadrupleForPositionForPlayerForPositionType(currentPosition, "X", t) );
+        positionTypes.forEach(t -> checkQuintupleForPositionForPlayerForPositionType(currentPosition, "O", t) );
+        positionTypes.forEach(t -> checkQuintupleForPositionForPlayerForPositionType(currentPosition, "X", t) );
+      }
+    }
+  }
+  
+  private void checkDoubleForPositionForPlayerForPositionType(CurrentPosition currentPosition, String playerChar, String positionType) {
+    if ( modelingUtils.checkDouble(currentPosition, positionType, playerChar) 
+         && !modelingUtils.checkTriple(currentPosition, positionType, playerChar)
+         && !modelingUtils.checkDisconnectedTriple(currentPosition, positionType, playerChar)
+         && !modelingUtils.checkDoubleInsideTriple(currentPosition, positionType, playerChar)
+         && !modelingUtils.checkDoubleInsideDisconnectedTriple(currentPosition, positionType, playerChar)) {
+      // double found, now what is type of double
+      if ( modelingUtils.checkEmptyFields(currentPosition, positionType, 2,3, 3 )) {
+        // open double
+        positionModel.addOpenDoublesByPlayer(playerChar);
+      }
+      else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 2,2, 2 )) {
+        // mostly open double
+        positionModel.addMostlyOpenDoublesByPlayer(playerChar);
+      }
+      else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 2,1, 2 ) ||
+              modelingUtils.checkEmptyFields(currentPosition, positionType, 2,2, 1 ) ||
+              modelingUtils.checkEmptyFields(currentPosition, positionType, 2,0, 3 ) ||
+              modelingUtils.checkEmptyFields(currentPosition, positionType, 2,3, 0 )) {
+        // half open double
+        positionModel.addHalfOpenDoublesByPlayer(playerChar);
+      }
+    }
+  }  
+  
+  private void checkDisconnectedDoubleForPositionForPlayerForPositionType(CurrentPosition currentPosition, String playerChar, String positionType) {
+    if (modelingUtils.checkDisconnectedDouble(currentPosition, positionType, playerChar) &&
+        !modelingUtils.checkDisconnectedTriple(currentPosition, positionType, playerChar) &&
+        !modelingUtils.checkDisconnectedDoubleInsideDisconnectedTriple(currentPosition, positionType, playerChar) &&
+        !modelingUtils.checkDisconnectedDoubleInsideTwiceDisconnectedTriple(currentPosition, positionType, playerChar)) {
+      // disconnected double found, now what is type of double
+      if ( modelingUtils.checkEmptyFields(currentPosition, positionType, 3,2, 2 )) {
+        // open disconnected double
+        positionModel.addOpenDisconnectedDoublesByPlayer(playerChar);
+      }
+      else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 3,1, 2 ) ||
+              modelingUtils.checkEmptyFields(currentPosition, positionType, 3,2, 1 )) {
+        // mostly open disconnected double
+        positionModel.addMostlyOpenDisconnectedDoublesByPlayer(playerChar);
+      }
+      else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 3,1, 1 ) ||
+              modelingUtils.checkEmptyFields(currentPosition, positionType, 3,2, 0 ) ||
+              modelingUtils.checkEmptyFields(currentPosition, positionType, 3,0, 2 )) {
+        // half open disconnected double
+        positionModel.addHalfOpenDisconnectedDoublesByPlayer(playerChar);
       }
     }
   }
 
-  private boolean checkDouble(int rowIndex, int columnIndex, String positionType, String playerChar) {
-
-    if (ROW.equals(positionType)) {
-      if (columnIndex == 24) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex][columnIndex+1])) return true;
+  private void checkTripleForPositionForPlayerForPositionType(CurrentPosition currentPosition, String playerChar, String positionType) {
+    if ( modelingUtils.checkTriple(currentPosition, positionType, playerChar) && !modelingUtils.checkQuadruple(currentPosition, positionType,playerChar)
+         && !modelingUtils.checkDisconnectedQuadruple(currentPosition, positionType, playerChar)
+         && !modelingUtils.checkTripleInsideQuadruple(currentPosition, positionType, playerChar)
+         && !modelingUtils.checkTripleInsideDisconnectedQuadruple(currentPosition, positionType, playerChar) ) {
+      // triple found, now what is its type
+      if ( modelingUtils.checkEmptyFields(currentPosition, positionType, 3,2, 2 )) {
+        // open triple
+        positionModel.addOpenTriplesByPlayer(playerChar);
+      }
+      else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 3,1, 1 )) {
+        // mostly open triple
+        positionModel.addMostlyOpenTriplesByPlayer(playerChar);
+      }
+      else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 3,0, 2 ) ||
+              modelingUtils.checkEmptyFields(currentPosition, positionType, 3,2, 0 )) {
+        // half open triple
+        positionModel.addHalfOpenTriplesByPlayer(playerChar);
+      }
     }
-    if (COLUMN.equals(positionType)) {
-      if (rowIndex == 24) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex+1][columnIndex])) return true;
-    }
-    if (FIRST_DIAGONAL.equals(positionType)) {
-      if (rowIndex == 24 || columnIndex == 24) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex+1][columnIndex+1])) return true;
-    }
-    if (SECOND_DIAGONAL.equals(positionType)) {
-      if (rowIndex == 0 || columnIndex == 24) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex-1][columnIndex+1])) return true;
-    }
-
-    return false;
   }
 
-  private boolean checkEmptyFields(int rowIndex, int columnIndex, String positionType, int numberOfCharsInPattern, int emptyFieldsBefore, int emptyFieldsAfter) {
-
-    if (ROW.equals(positionType)) {
-      if (columnIndex < emptyFieldsBefore ||  columnIndex + numberOfCharsInPattern + emptyFieldsAfter > 25) return false;
-      for (int i=1; i<emptyFieldsBefore+1; i++) {
-        if (!"&nbsp;".equals(positionMatrix[rowIndex][columnIndex-i])) return false;
+  private void checkDisconnectedTripleForPositionForPlayerForPositionType(CurrentPosition currentPosition, String playerChar, String positionType) {
+    if ( modelingUtils.checkDisconnectedTriple(currentPosition, positionType, playerChar) &&
+         !modelingUtils.checkDisconnectedQuadruple(currentPosition, positionType, playerChar) &&
+         !modelingUtils.checkDisconnectedTripleInsideDisconnectedQuadruple(currentPosition, positionType, playerChar)) {
+      // disconnected triple found, now what is its type
+      if ( modelingUtils.checkEmptyFields(currentPosition, positionType, 4,1, 1 )) {
+        // open disconnected triple
+        positionModel.addOpenDisconnectedTriplesByPlayer(playerChar);
       }
-      for (int i=0; i<emptyFieldsAfter; i++) {
-        if (!"&nbsp;".equals(positionMatrix[rowIndex][columnIndex+i+numberOfCharsInPattern])) return false;
-      }
-    }
-    if (COLUMN.equals(positionType)) {
-      if (rowIndex < emptyFieldsBefore ||  rowIndex + numberOfCharsInPattern + emptyFieldsAfter > 25) return false;
-      for (int i=1; i<emptyFieldsBefore+1; i++) {
-        if (!"&nbsp;".equals(positionMatrix[rowIndex-i][columnIndex])) return false;
-      }
-      for (int i=0; i<emptyFieldsAfter; i++) {
-        if (!"&nbsp;".equals(positionMatrix[rowIndex+i+numberOfCharsInPattern][columnIndex])) return false;
+      else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 4,0, 1 ) ||
+              modelingUtils.checkEmptyFields(currentPosition, positionType, 4,1, 0 )) {
+        // half open disconnected triple
+        positionModel.addHalfOpenDisconnectedTriplesByPlayer(playerChar);
       }
     }
-    if (FIRST_DIAGONAL.equals(positionType)) {
-      if (columnIndex < emptyFieldsBefore ||  columnIndex + numberOfCharsInPattern + emptyFieldsAfter > 25) return false;
-      if (rowIndex < emptyFieldsBefore ||  rowIndex + numberOfCharsInPattern + emptyFieldsAfter > 25) return false;
-      for (int i=1; i<emptyFieldsBefore+1; i++) {
-        if (!"&nbsp;".equals(positionMatrix[rowIndex-i][columnIndex-i])) return false;
-      }
-      for (int i=0; i<emptyFieldsAfter; i++) {
-        if (!"&nbsp;".equals(positionMatrix[rowIndex+i+numberOfCharsInPattern][columnIndex+i+numberOfCharsInPattern])) return false;
-      }
+    if ( modelingUtils.checkTwiceDisconnectedTriple(currentPosition, positionType, playerChar) ) {
+      // twice disconnected triple found
+      positionModel.addTwiceDisconnectedTriplesByPlayer(playerChar);
     }
-    if (SECOND_DIAGONAL.equals(positionType)) {
-      if (columnIndex < emptyFieldsBefore ||  columnIndex + numberOfCharsInPattern + emptyFieldsAfter > 25) return false;
-      if (rowIndex + emptyFieldsBefore > 24 ||  rowIndex - numberOfCharsInPattern - emptyFieldsAfter + 1 < 0) return false;
-      for (int i=1; i<emptyFieldsBefore+1; i++) {
-        if (!"&nbsp;".equals(positionMatrix[rowIndex+i][columnIndex-i])) return false;
-      }
-      for (int i=0; i<emptyFieldsAfter; i++) {
-        if (!"&nbsp;".equals(positionMatrix[rowIndex-i-numberOfCharsInPattern][columnIndex+i+numberOfCharsInPattern])) return false;
-      }
-    }
-
-    return true;
   }
 
-  private boolean checkTriple(int rowIndex, int columnIndex, String positionType, String playerChar) {
-
-    if (ROW.equals(positionType)) {
-      if (columnIndex >= 23) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex][columnIndex+1])
-              && playerChar.equals(positionMatrix[rowIndex][columnIndex+2])) return true;
+  private void checkQuadrupleForPositionForPlayerForPositionType(CurrentPosition currentPosition, String playerChar, String positionType) {
+    if ( modelingUtils.checkQuadruple(currentPosition, positionType, playerChar) &&
+         !modelingUtils.checkQuintuple(currentPosition, positionType, playerChar) &&
+         !modelingUtils.checkQuadrupleInsideQuintuple(currentPosition, positionType, playerChar)) {
+      // quadruple found, now what is its type
+      if ( modelingUtils.checkEmptyFields(currentPosition, positionType, 4,1, 1 )) {
+        // open quadruple
+        positionModel.addOpenQuadruplesByPlayer(playerChar);
+      }
+      else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 4,0, 1 ) ||
+              modelingUtils.checkEmptyFields(currentPosition, positionType, 4,1, 0 )) {
+        // half open quadruple
+        positionModel.addHalfOpenQuadruplesByPlayer(playerChar);
+      }
     }
-    if (COLUMN.equals(positionType)) {
-      if (rowIndex >= 23) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex+1][columnIndex])
-              && playerChar.equals(positionMatrix[rowIndex+2][columnIndex])) return true;
+    if (modelingUtils.checkDisconnectedQuadruple(currentPosition, positionType, playerChar)) {
+      // disconnected quadruple found
+      positionModel.addDisconnectedQuadruplesByPlayer(playerChar);
     }
-    if (FIRST_DIAGONAL.equals(positionType)) {
-      if (rowIndex >= 23 || columnIndex >= 23) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex+1][columnIndex+1])
-              && playerChar.equals(positionMatrix[rowIndex+2][columnIndex+2])) return true;
-    }
-    if (SECOND_DIAGONAL.equals(positionType)) {
-      if (rowIndex <= 1 || columnIndex >=23) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex-1][columnIndex+1])
-              && playerChar.equals(positionMatrix[rowIndex-2][columnIndex+2])) return true;
-    }
-
-    return false;
   }
 
-  private boolean checkInsideTriple(int rowIndex, int columnIndex, String positionType, String playerChar) {
-
-    if (ROW.equals(positionType)) {
-      if (columnIndex >= 23) return false;
-      if (columnIndex == 0) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex][columnIndex+1])
-              && playerChar.equals(positionMatrix[rowIndex][columnIndex-1])) return true;
+  private void checkQuintupleForPositionForPlayerForPositionType(CurrentPosition currentPosition, String playerChar, String positionType) {
+    if ( modelingUtils.checkQuintuple(currentPosition, positionType, playerChar) ) {
+      // quintuple found
+      positionModel.addQuintuplesByPlayer(playerChar);
     }
-    if (COLUMN.equals(positionType)) {
-      if (rowIndex >= 23) return false;
-      if (rowIndex == 0) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex+1][columnIndex])
-              && playerChar.equals(positionMatrix[rowIndex-1][columnIndex])) return true;
-    }
-    if (FIRST_DIAGONAL.equals(positionType)) {
-      if (rowIndex >= 23 || columnIndex >= 23) return false;
-      if (rowIndex == 0 || columnIndex == 0) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex+1][columnIndex+1])
-              && playerChar.equals(positionMatrix[rowIndex-1][columnIndex-1])) return true;
-    }
-    if (SECOND_DIAGONAL.equals(positionType)) {
-      if (rowIndex <= 1 || columnIndex >= 23) return false;
-      if (rowIndex == 24 || columnIndex == 0) return false;
-      if (playerChar.equals(positionMatrix[rowIndex][columnIndex]) && playerChar.equals(positionMatrix[rowIndex-1][columnIndex+1])
-              && playerChar.equals(positionMatrix[rowIndex+1][columnIndex-1])) return true;
-    }
-
-    return false;
   }
 
 }

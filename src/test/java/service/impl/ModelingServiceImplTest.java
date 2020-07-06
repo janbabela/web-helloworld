@@ -32,8 +32,8 @@ public class ModelingServiceImplTest {
 
     modelingService.describePosition(positionMatrix);
 
-    Assert.assertEquals(1, modelingService.getPositionModel().xOpenDoubles);
-    Assert.assertEquals(0, modelingService.getPositionModel().oHalfOpenDoubles);
-    Assert.assertEquals(1, modelingService.getPositionModel().xMostlyOpenDoubles);
+    Assert.assertEquals(1, modelingService.getPositionModel().getXOpenDoubles());
+    Assert.assertEquals(0, modelingService.getPositionModel().getOHalfOpenDoubles());
+    Assert.assertEquals(1, modelingService.getPositionModel().getXMostlyOpenDoubles());
   }
 }
