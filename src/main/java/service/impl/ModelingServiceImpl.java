@@ -2,8 +2,8 @@ package service.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import model.CurrentPosition;
-import model.PositionModel;
+import dto.CurrentPosition;
+import dto.PositionDto;
 import service.ModelingService;
 
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class ModelingServiceImpl implements ModelingService {
 
-  PositionModel positionModel = new PositionModel();
+  PositionDto positionDto = new PositionDto();
 
   String[][] positionMatrix = new String[25][25];
 
@@ -32,7 +32,7 @@ public class ModelingServiceImpl implements ModelingService {
 
     this.positionMatrix = positionMatrix;
     modelingUtils.positionMatrix = positionMatrix;
-    positionModel = new PositionModel();
+    positionDto = new PositionDto();
     countPatterns();
   }
 
@@ -66,18 +66,18 @@ public class ModelingServiceImpl implements ModelingService {
       // double found, now what is type of double
       if ( modelingUtils.checkEmptyFields(currentPosition, positionType, 2,3, 3 )) {
         // open double
-        positionModel.addOpenDoublesByPlayer(playerChar);
+        positionDto.addOpenDoublesByPlayer(playerChar);
       }
       else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 2,2, 2 )) {
         // mostly open double
-        positionModel.addMostlyOpenDoublesByPlayer(playerChar);
+        positionDto.addMostlyOpenDoublesByPlayer(playerChar);
       }
       else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 2,1, 2 ) ||
               modelingUtils.checkEmptyFields(currentPosition, positionType, 2,2, 1 ) ||
               modelingUtils.checkEmptyFields(currentPosition, positionType, 2,0, 3 ) ||
               modelingUtils.checkEmptyFields(currentPosition, positionType, 2,3, 0 )) {
         // half open double
-        positionModel.addHalfOpenDoublesByPlayer(playerChar);
+        positionDto.addHalfOpenDoublesByPlayer(playerChar);
       }
     }
   }  
@@ -90,18 +90,18 @@ public class ModelingServiceImpl implements ModelingService {
       // disconnected double found, now what is type of double
       if ( modelingUtils.checkEmptyFields(currentPosition, positionType, 3,2, 2 )) {
         // open disconnected double
-        positionModel.addOpenDisconnectedDoublesByPlayer(playerChar);
+        positionDto.addOpenDisconnectedDoublesByPlayer(playerChar);
       }
       else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 3,1, 2 ) ||
               modelingUtils.checkEmptyFields(currentPosition, positionType, 3,2, 1 )) {
         // mostly open disconnected double
-        positionModel.addMostlyOpenDisconnectedDoublesByPlayer(playerChar);
+        positionDto.addMostlyOpenDisconnectedDoublesByPlayer(playerChar);
       }
       else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 3,1, 1 ) ||
               modelingUtils.checkEmptyFields(currentPosition, positionType, 3,2, 0 ) ||
               modelingUtils.checkEmptyFields(currentPosition, positionType, 3,0, 2 )) {
         // half open disconnected double
-        positionModel.addHalfOpenDisconnectedDoublesByPlayer(playerChar);
+        positionDto.addHalfOpenDisconnectedDoublesByPlayer(playerChar);
       }
     }
   }
@@ -114,16 +114,16 @@ public class ModelingServiceImpl implements ModelingService {
       // triple found, now what is its type
       if ( modelingUtils.checkEmptyFields(currentPosition, positionType, 3,2, 2 )) {
         // open triple
-        positionModel.addOpenTriplesByPlayer(playerChar);
+        positionDto.addOpenTriplesByPlayer(playerChar);
       }
       else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 3,1, 1 )) {
         // mostly open triple
-        positionModel.addMostlyOpenTriplesByPlayer(playerChar);
+        positionDto.addMostlyOpenTriplesByPlayer(playerChar);
       }
       else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 3,0, 2 ) ||
               modelingUtils.checkEmptyFields(currentPosition, positionType, 3,2, 0 )) {
         // half open triple
-        positionModel.addHalfOpenTriplesByPlayer(playerChar);
+        positionDto.addHalfOpenTriplesByPlayer(playerChar);
       }
     }
   }
@@ -135,17 +135,17 @@ public class ModelingServiceImpl implements ModelingService {
       // disconnected triple found, now what is its type
       if ( modelingUtils.checkEmptyFields(currentPosition, positionType, 4,1, 1 )) {
         // open disconnected triple
-        positionModel.addOpenDisconnectedTriplesByPlayer(playerChar);
+        positionDto.addOpenDisconnectedTriplesByPlayer(playerChar);
       }
       else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 4,0, 1 ) ||
               modelingUtils.checkEmptyFields(currentPosition, positionType, 4,1, 0 )) {
         // half open disconnected triple
-        positionModel.addHalfOpenDisconnectedTriplesByPlayer(playerChar);
+        positionDto.addHalfOpenDisconnectedTriplesByPlayer(playerChar);
       }
     }
     if ( modelingUtils.checkTwiceDisconnectedTriple(currentPosition, positionType, playerChar) ) {
       // twice disconnected triple found
-      positionModel.addTwiceDisconnectedTriplesByPlayer(playerChar);
+      positionDto.addTwiceDisconnectedTriplesByPlayer(playerChar);
     }
   }
 
@@ -156,24 +156,24 @@ public class ModelingServiceImpl implements ModelingService {
       // quadruple found, now what is its type
       if ( modelingUtils.checkEmptyFields(currentPosition, positionType, 4,1, 1 )) {
         // open quadruple
-        positionModel.addOpenQuadruplesByPlayer(playerChar);
+        positionDto.addOpenQuadruplesByPlayer(playerChar);
       }
       else if (modelingUtils.checkEmptyFields(currentPosition, positionType, 4,0, 1 ) ||
               modelingUtils.checkEmptyFields(currentPosition, positionType, 4,1, 0 )) {
         // half open quadruple
-        positionModel.addHalfOpenQuadruplesByPlayer(playerChar);
+        positionDto.addHalfOpenQuadruplesByPlayer(playerChar);
       }
     }
     if (modelingUtils.checkDisconnectedQuadruple(currentPosition, positionType, playerChar)) {
       // disconnected quadruple found
-      positionModel.addDisconnectedQuadruplesByPlayer(playerChar);
+      positionDto.addDisconnectedQuadruplesByPlayer(playerChar);
     }
   }
 
   private void checkQuintupleForPositionForPlayerForPositionType(CurrentPosition currentPosition, String playerChar, String positionType) {
     if ( modelingUtils.checkQuintuple(currentPosition, positionType, playerChar) ) {
       // quintuple found
-      positionModel.addQuintuplesByPlayer(playerChar);
+      positionDto.addQuintuplesByPlayer(playerChar);
     }
   }
 

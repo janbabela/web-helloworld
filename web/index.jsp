@@ -8,7 +8,7 @@
       function change(rNo, cNo)
       {
         var charToWrite;
-        if ($("#somediv").text() == "first" || $("#somediv").text()=="") {
+        if ($("#somediv").text() == "FIRST: X" || $("#somediv").text()=="") {
           charToWrite = "X";
         } else {
           charToWrite = "O";
@@ -726,7 +726,7 @@
       </tr>
     </table>
   </div>
-  <div id="somediv">first</div>
+  <div id="somediv">FIRST: X</div>
   <div id="positiondiv"><textarea id="testdiv" rows="20" cols="80"></textarea></div>
   <div id="position" hidden></div>
   </body>

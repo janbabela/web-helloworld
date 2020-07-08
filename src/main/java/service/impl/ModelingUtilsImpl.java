@@ -1,8 +1,6 @@
 package service.impl;
 
-import model.CurrentPosition;
-
-import java.util.EmptyStackException;
+import dto.CurrentPosition;
 
 public class ModelingUtilsImpl {
 

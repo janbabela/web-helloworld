@@ -1,10 +1,10 @@
 package service;
 
-import model.PositionModel;
+import dto.PositionDto;
 
 public interface ModelingService {
 
   void describePosition(String[][] positionMatrix);
 
-  PositionModel getPositionModel();
+  PositionDto getPositionDto();
 }
