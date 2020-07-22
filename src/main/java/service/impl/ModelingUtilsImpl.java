@@ -1,6 +1,6 @@
 package service.impl;
 
-import dto.CurrentPosition;
+import dto.CharPosition;
 
 public class ModelingUtilsImpl {
 
@@ -13,10 +13,10 @@ public class ModelingUtilsImpl {
   private final static String EMPTY = "&nbsp;";
 
 
-  boolean checkDouble(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkDouble(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex == 24) return false;
@@ -38,10 +38,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkDisconnectedDouble(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkDisconnectedDouble(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 23) return false;
@@ -67,10 +67,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkEmptyFields(CurrentPosition currentPosition, String positionType, int numberOfCharsInPattern, int emptyFieldsBefore, int emptyFieldsAfter) {
+  boolean checkEmptyFields(CharPosition charPosition, String positionType, int numberOfCharsInPattern, int emptyFieldsBefore, int emptyFieldsAfter) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex < emptyFieldsBefore ||  columnIndex + numberOfCharsInPattern + emptyFieldsAfter > 25) return false;
@@ -114,10 +114,10 @@ public class ModelingUtilsImpl {
     return true;
   }
 
-  boolean checkTriple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkTriple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 23) return false;
@@ -143,10 +143,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkDisconnectedTriple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkDisconnectedTriple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 22) return false;
@@ -176,10 +176,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkTwiceDisconnectedTriple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkTwiceDisconnectedTriple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 21) return false;
@@ -209,10 +209,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkDoubleInsideTriple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkDoubleInsideTriple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex == 24 || columnIndex ==0) return false;
@@ -237,10 +237,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkDoubleInsideDisconnectedTriple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkDoubleInsideDisconnectedTriple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex == 24 || columnIndex <= 1) return false;
@@ -266,10 +266,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkDisconnectedDoubleInsideDisconnectedTriple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkDisconnectedDoubleInsideDisconnectedTriple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 23 || columnIndex == 0) return false;
@@ -295,10 +295,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkDisconnectedDoubleInsideTwiceDisconnectedTriple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkDisconnectedDoubleInsideTwiceDisconnectedTriple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 23 || columnIndex <= 1) return false;
@@ -328,10 +328,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkQuadruple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkQuadruple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 22) return false;
@@ -357,10 +357,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkDisconnectedQuadruple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkDisconnectedQuadruple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 21) return false;
@@ -410,10 +410,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkTripleInsideQuadruple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkTripleInsideQuadruple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 23 || columnIndex ==0) return false;
@@ -438,10 +438,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkTripleInsideDisconnectedQuadruple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkTripleInsideDisconnectedQuadruple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 23 || columnIndex <=1) return false;
@@ -470,10 +470,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkDisconnectedTripleInsideDisconnectedQuadruple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkDisconnectedTripleInsideDisconnectedQuadruple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 22 || columnIndex ==0) return false;
@@ -510,10 +510,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkQuintuple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkQuintuple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 21) return false;
@@ -543,10 +543,10 @@ public class ModelingUtilsImpl {
     return false;
   }
 
-  boolean checkQuadrupleInsideQuintuple(CurrentPosition currentPosition, String positionType, String playerChar) {
+  boolean checkQuadrupleInsideQuintuple(CharPosition charPosition, String positionType, String playerChar) {
 
-    int rowIndex = currentPosition.getRow();
-    int columnIndex = currentPosition.getColumn();
+    int rowIndex = charPosition.getRow();
+    int columnIndex = charPosition.getColumn();
 
     if (ROW.equals(positionType)) {
       if (columnIndex >= 22 || columnIndex ==0) return false;

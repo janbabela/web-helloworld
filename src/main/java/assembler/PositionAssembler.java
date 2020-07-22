@@ -60,6 +60,16 @@ public class PositionAssembler {
     return positionModel;
   }
 
+  public List<PositionDto> populatePositionDtos(List<PositionModel> positionModels) {
+
+    List<PositionDto> result = new ArrayList<>();
+
+    positionModels.forEach(p -> result.add(populatePositionDto(p)));
+
+    return result;
+  }
+
+
   public PositionDto populatePositionDto(PositionModel positionModel) {
 
     PositionDto positionDto = new PositionDto();
