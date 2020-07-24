@@ -1,13 +1,17 @@
 package service.impl;
 
 import assembler.PositionAssembler;
+import dao.PositionHistoryDao;
+import dao.impl.PositionsHistoryDaoImpl;
 import dto.CharPosition;
 import dto.PositionDto;
 import lombok.Getter;
 import lombok.Setter;
+import model.PositionModel;
 import org.apache.commons.math3.linear.MatrixUtils;
 import service.ComputerMoveService;
 import service.ModelingService;
+import service.RegressionService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,13 +23,25 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
   @Setter
   private double[] coefficients;
 
-  private PositionAssembler assembler = new PositionAssembler();
+  @Getter
+  @Setter
+  private double evaluation;
 
-  private ModelingService modelingService = new ModelingServiceImpl();
+  private final PositionAssembler assembler = new PositionAssembler();
 
-  public void inicialize() {
-    // using the positionHistoryDao it will load history of games from database
-    // using the RegressionService it will compute coefficients, that determine the game strategy
+  private final ModelingService modelingService = new ModelingServiceImpl();
+
+  private final PositionHistoryDao positionHistoryDao = new PositionsHistoryDaoImpl();
+
+  private final RegressionService regressionService = new RegressionServiceImpl();
+
+  public void initialize(String playerChar) {
+    List<PositionModel> positionsHistory = positionHistoryDao.selectAll();
+
+    double[][] xVariable = regressionService.createXVariable(positionsHistory,playerChar);
+    double[] yVariable = regressionService.createYVariable(positionsHistory);
+
+    coefficients = regressionService.computeCoefficientLeastSquare(xVariable, yVariable);
   }
 
   public CharPosition makeMove(String[][] positionMatrix, String playerChar) {
@@ -33,14 +49,14 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
     List<CharPosition> reasonableMoves = findReasonableMoves(positionMatrix);
 
     CharPosition bestMove = new CharPosition(12,12);
-    double bestEvaluation = 0;
-    double evaluation;
+    double currentEvaluation;
+    evaluation = 0;
     for (CharPosition possibleMove : reasonableMoves) {
       positionMatrix[possibleMove.getRow()][possibleMove.getColumn()] = playerChar;
       modelingService.describePosition(positionMatrix);
-      evaluation = evaluatePosition(modelingService.getPositionDto());
-      if (evaluation > bestEvaluation) {
-        bestEvaluation = evaluation;
+      currentEvaluation = evaluatePosition(modelingService.getPositionDto());
+      if (currentEvaluation > evaluation) {
+        evaluation = currentEvaluation;
         bestMove = possibleMove;
       }
     }
@@ -78,11 +94,13 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
 
     double[] positionDescription = Arrays.stream(assembler.extractPositionModel(positionDto).getPositionDescription()).asDoubleStream().toArray();
 
-    return MatrixUtils.createRealVector(coefficients).dotProduct(MatrixUtils.createRealVector(positionDescription));
+    double dotProduct = MatrixUtils.createRealVector(coefficients).dotProduct(MatrixUtils.createRealVector(positionDescription));
+
+    return 1/(1+Math.exp(-dotProduct*Math.log(2)));
   }
 
 
-  public static void main(String[] args) {
+  private static void testReasonableMoves() {
     String[][] testPositionMatrix = new String[25][25];
     for (int i = 0; i<25; i++) {
       for (int j=0; j<25; j++) {
@@ -92,6 +110,13 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
     testPositionMatrix[1][1]= "X";
     ComputerMoveServiceImpl computerMoveService = new ComputerMoveServiceImpl();
     System.out.println(computerMoveService.findReasonableMoves(testPositionMatrix));
+  }
+
+
+  public static void main(String[] args) {
+    ComputerMoveServiceImpl computerMoveService = new ComputerMoveServiceImpl();
+    computerMoveService.initialize("O");
+    System.out.println(Arrays.toString(computerMoveService.getCoefficients()));
   }
 
 }

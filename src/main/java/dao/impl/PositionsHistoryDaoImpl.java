@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PositionsHistoryDaoImpl implements PositionHistoryDao {
@@ -148,21 +149,72 @@ public class PositionsHistoryDaoImpl implements PositionHistoryDao {
   /**
    * select all rows in the positionshistory table
    */
-  public void selectFirstColumns() {
-    String sql = "SELECT id, player_char_moved, evaluation FROM positionshistory";
+  public List<PositionModel> selectAll() {
+    String sql = "SELECT id, player_char_moved, evaluation," +
+            " oOpenDoubles," +
+            " oMostlyOpenDoubles," +
+            " oHalfOpenDoubles," +
+            " oOpenDisconnectedDoubles," +
+            " oMostlyOpenDisconnectedDoubles," +
+            " oHalfOpenDisconnectedDoubles," +
+            " oOpenTriples," +
+            " oMostlyOpenTriples," +
+            " oHalfOpenTriples," +
+            " oOpenDisconnectedTriples," +
+            " oHalfOpenDisconnectedTriples," +
+            " oTwiceDisconnectedTriples," +
+            " oOpenQuadruples," +
+            " oHalfOpenQuadruples," +
+            " oDisconnectedQuadruples," +
+            " oQuintuples," +
+            " xOpenDoubles," +
+            " xMostlyOpenDoubles," +
+            " xHalfOpenDoubles," +
+            " xOpenDisconnectedDoubles," +
+            " xMostlyOpenDisconnectedDoubles," +
+            " xHalfOpenDisconnectedDoubles," +
+            " xOpenTriples," +
+            " xMostlyOpenTriples," +
+            " xHalfOpenTriples," +
+            " xOpenDisconnectedTriples," +
+            " xHalfOpenDisconnectedTriples," +
+            " xTwiceDisconnectedTriples," +
+            " xOpenQuadruples," +
+            " xHalfOpenQuadruples," +
+            " xDisconnectedQuadruples," +
+            " xQuintuples" +
+            " FROM positionshistory";
 
+    List<PositionModel> positionsHistory = new ArrayList<>();
     try (Connection conn = this.connect();
          Statement stmt  = conn.createStatement();
          ResultSet rs    = stmt.executeQuery(sql)){
 
       // loop through the result set
       while (rs.next()) {
-        System.out.println(rs.getInt("id") + "\t" +
-                           rs.getString("player_char_moved") + "\t" +
-                           rs.getFloat("evaluation"));
+        PositionModel positionModel = new PositionModel();
+        positionModel.setLastMove(rs.getString("player_char_moved"));
+        positionModel.setEvaluation(rs.getFloat("evaluation"));
+        for (int i=0; i<32; i++) {
+          positionModel.getPositionDescription()[i] = rs.getInt(i+4);
+        }
+        positionsHistory.add(positionModel);
       }
     } catch (SQLException e) {
       System.out.println(e.getMessage());
+    }
+    return positionsHistory;
+  }
+
+  public static void main(String[] args) {
+    PositionsHistoryDaoImpl positionsHistoryDao = new PositionsHistoryDaoImpl();
+    for (int i=28; i<32; i++) {
+      PositionModel positionModel = new PositionModel();
+      positionModel.setLastMove("O");
+      positionModel.setMoveNumber(5);
+      positionModel.setEvaluation(0.4f);
+      positionModel.getPositionDescription()[i] = 1;
+      positionsHistoryDao.insertPosition(positionModel);
     }
   }
   

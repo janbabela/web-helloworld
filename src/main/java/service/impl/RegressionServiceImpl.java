@@ -19,11 +19,11 @@ public class RegressionServiceImpl implements RegressionService {
     RealMatrix xMatrix = MatrixUtils.createRealMatrix(xVariable);
     RealVector yVector = MatrixUtils.createRealVector(yVariable);
     RealMatrix xTransposed = xMatrix.transpose();
-    RealMatrix multiplied = xMatrix.multiply(xTransposed);
+    RealMatrix multiplied = xTransposed.multiply(xMatrix);
     RealMatrix inverted = new LUDecomposition(multiplied).getSolver().getInverse();
 
-    RealVector xByY = xMatrix.operate(yVector);
-    RealVector result = inverted.operate(xByY);
+    RealVector xTransposedByY = xTransposed.operate(yVector);
+    RealVector result = inverted.operate(xTransposedByY);
 
     return result.toArray();
   }
@@ -32,7 +32,13 @@ public class RegressionServiceImpl implements RegressionService {
 
     List<Double> resultList = new ArrayList<>();
 
-    positionModels.forEach(m-> resultList.add((double)m.getEvaluation()));
+    positionModels.forEach(m-> {
+      double evaluation = m.getEvaluation();
+      if (evaluation ==1) evaluation = 0.99;
+      if (evaluation ==0) evaluation = 0.01;
+      double transformedEvaluation = Math.log(evaluation/(1-evaluation))/Math.log(2);
+      resultList.add(transformedEvaluation);}
+    );
 
     return resultList.stream().mapToDouble(d -> d).toArray();
   }
@@ -47,8 +53,8 @@ public class RegressionServiceImpl implements RegressionService {
       if (myChar.equals(positionModel.getLastMove())) {
         result[i] = Arrays.stream(positionModel.getPositionDescription()).asDoubleStream().toArray();
       } else {
-        int[] modifiedPositionDescription1 = Arrays.copyOfRange(positionModel.getPositionDescription(),16,31);
-        int[] modifiedPositionDescription2 = Arrays.copyOfRange(positionModel.getPositionDescription(),0,15);
+        int[] modifiedPositionDescription1 = Arrays.copyOfRange(positionModel.getPositionDescription(),16,32);
+        int[] modifiedPositionDescription2 = Arrays.copyOfRange(positionModel.getPositionDescription(),0,16);
         int[] modifiedPositionDescriptionFull = IntStream.concat(Arrays.stream(modifiedPositionDescription1), Arrays.stream(modifiedPositionDescription2)).toArray();
         result[i] = Arrays.stream(modifiedPositionDescriptionFull).asDoubleStream().toArray();
       }

@@ -4,7 +4,7 @@ import dto.CharPosition;
 
 public interface ComputerMoveService {
 
-  void inicialize();
+  void initialize(String playerChar);
 
   CharPosition makeMove(String[][] positionMatrix, String playerChar);
 }

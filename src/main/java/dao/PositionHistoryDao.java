@@ -10,4 +10,6 @@ public interface PositionHistoryDao {
 
   void insertGame(List<PositionModel> game);
 
+  List<PositionModel> selectAll();
+
 }
