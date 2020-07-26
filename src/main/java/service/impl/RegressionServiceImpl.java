@@ -16,8 +16,8 @@ public class RegressionServiceImpl implements RegressionService {
 
   public double[] computeCoefficientLeastSquare(double[][] xVariable, double[] yVariable) {
 
-    RealMatrix xMatrix = MatrixUtils.createRealMatrix(xVariable);
-    RealVector yVector = MatrixUtils.createRealVector(yVariable);
+    RealVector yVector = MatrixUtils.createRealVector(yVariable); //new ArrayRealVector(yVariable, true);
+    RealMatrix xMatrix = MatrixUtils.createRealMatrix(xVariable); //new Array2DRowRealMatrix(xVariable);
     RealMatrix xTransposed = xMatrix.transpose();
     RealMatrix multiplied = xTransposed.multiply(xMatrix);
     RealMatrix inverted = new LUDecomposition(multiplied).getSolver().getInverse();

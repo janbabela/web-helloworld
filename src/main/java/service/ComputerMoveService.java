@@ -6,5 +6,7 @@ public interface ComputerMoveService {
 
   void initialize(String playerChar);
 
-  CharPosition makeMove(String[][] positionMatrix, String playerChar);
+  CharPosition makeMove(String[][] positionMatrix, String playerChar, boolean startOfGame);
+
+  double getEvaluation();
 }

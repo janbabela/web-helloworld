@@ -16,6 +16,7 @@ import service.RegressionService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class ComputerMoveServiceImpl implements ComputerMoveService {
 
@@ -35,6 +36,14 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
 
   private final RegressionService regressionService = new RegressionServiceImpl();
 
+  public ComputerMoveServiceImpl() {
+
+  }
+
+  public ComputerMoveServiceImpl(String playerChar) {
+    initialize(playerChar);
+  }
+
   public void initialize(String playerChar) {
     List<PositionModel> positionsHistory = positionHistoryDao.selectAll();
 
@@ -44,16 +53,18 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
     coefficients = regressionService.computeCoefficientLeastSquare(xVariable, yVariable);
   }
 
-  public CharPosition makeMove(String[][] positionMatrix, String playerChar) {
+  public CharPosition makeMove(String[][] positionMatrix, String playerChar, boolean startOfGame) {
 
-    List<CharPosition> reasonableMoves = findReasonableMoves(positionMatrix);
+    List<CharPosition> reasonableMoves = findReasonableMoves(positionMatrix, startOfGame);
 
-    CharPosition bestMove = new CharPosition(12,12);
+    CharPosition bestMove = reasonableMoves.get(0);
+    String[][] currentPositionMatrix;
     double currentEvaluation;
     evaluation = 0;
     for (CharPosition possibleMove : reasonableMoves) {
-      positionMatrix[possibleMove.getRow()][possibleMove.getColumn()] = playerChar;
-      modelingService.describePosition(positionMatrix);
+      currentPositionMatrix = Arrays.stream(positionMatrix).map(String[]::clone).toArray(String[][]::new);;
+      currentPositionMatrix[possibleMove.getRow()][possibleMove.getColumn()] = playerChar;
+      modelingService.describePosition(currentPositionMatrix);
       currentEvaluation = evaluatePosition(modelingService.getPositionDto());
       if (currentEvaluation > evaluation) {
         evaluation = currentEvaluation;
@@ -64,13 +75,13 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
     return bestMove;
   }
 
-  private List<CharPosition> findReasonableMoves(String[][] positionMatrix) {
+  private List<CharPosition> findReasonableMoves(String[][] positionMatrix, boolean startOfGame) {
 
     List<CharPosition> result = new ArrayList<>();
     for (int i=0; i<25; i++) {
       for (int j=0; j<25; j++) {
         if (!"X".equals(positionMatrix[i][j]) && !"O".equals(positionMatrix[i][j])) {
-          if (checkSurroundingCells(positionMatrix,i,j)) {
+          if (checkSurroundingCells(positionMatrix,i,j,startOfGame)) {
             result.add(new CharPosition(i,j));
           }
         }
@@ -79,9 +90,11 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
     return result;
   }
 
-  private boolean checkSurroundingCells(String[][] positionMatrix, int row, int column) {
-    for (int i=-2; i<3; i++) {
-      for (int j=-2; j<3; j++) {
+  private boolean checkSurroundingCells(String[][] positionMatrix, int row, int column, boolean startOfGame) {
+
+    int threshold = startOfGame ? 1 : 2;
+    for (int i=-threshold; i<threshold+1; i++) {
+      for (int j=-threshold; j<threshold+1; j++) {
         if (row+i>=0 && column+j>=0 && row+i<25 && column+j<25 && ("X".equals(positionMatrix[row+i][column+j]) || "O".equals(positionMatrix[row+i][column+j]))) {
           return true;
         }
@@ -99,6 +112,19 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
     return 1/(1+Math.exp(-dotProduct*Math.log(2)));
   }
 
+  public CharPosition makeRandomMove(String[][] positionMatrix) {
+
+    Random rand = new Random();
+    int rand_i = rand.nextInt(25);
+    int rand_j = rand.nextInt(25);
+    if (!("X".equals(positionMatrix[rand_i][rand_j])) || "O".equals(positionMatrix[rand_i][rand_j])) {
+      return new CharPosition(rand_i,rand_j);
+    }
+    else {
+      return makeRandomMove(positionMatrix);
+    }
+  }
+
 
   private static void testReasonableMoves() {
     String[][] testPositionMatrix = new String[25][25];
@@ -109,14 +135,17 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
     }
     testPositionMatrix[1][1]= "X";
     ComputerMoveServiceImpl computerMoveService = new ComputerMoveServiceImpl();
-    System.out.println(computerMoveService.findReasonableMoves(testPositionMatrix));
+    System.out.println(computerMoveService.findReasonableMoves(testPositionMatrix, true));
   }
 
-
-  public static void main(String[] args) {
+  private static void testInitialize() {
     ComputerMoveServiceImpl computerMoveService = new ComputerMoveServiceImpl();
     computerMoveService.initialize("O");
     System.out.println(Arrays.toString(computerMoveService.getCoefficients()));
+  }
+
+  public static void main(String[] args) {
+    testInitialize();
   }
 
 }

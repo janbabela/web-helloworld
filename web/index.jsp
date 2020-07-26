@@ -4,44 +4,7 @@
     <title>Title</title>
     <link href="css/main.css" rel="stylesheet" type="text/css">
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script>
-      function change(rNo, cNo)
-      {
-        var charToWrite;
-        if ($("#somediv").text() == "FIRST: X" || $("#somediv").text()=="") {
-          charToWrite = "X";
-        } else {
-          charToWrite = "O";
-        }
-
-        var currentButton = document.getElementById("idr"+rNo+"c"+cNo);
-        if (currentButton.innerHTML == "&nbsp;") {
-          currentButton.innerHTML = charToWrite;
-          $.get("plainMove", function (responseText) {   // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response text...
-            $("#somediv").text(responseText);// Locate HTML DOM element with ID "somediv" and set its text content with the response text.
-          });
-        }
-
-        var position = new Array(25);
-        for (var i = 0; i < position.length; i++) {
-          position[i] = new Array(25);
-        }
-        for(var r=1; r<26; r++) {
-          for(var c=1; c<26; c++) {
-            position[r-1][c-1] = document.getElementById("idr" + r + "c" + c).innerHTML;
-          }
-        }
-        $.post("position", {
-            position : JSON.stringify(position)
-          }, function(response, status) {
-            $("#testdiv").text(response);
-          }
-        );
-        $.get("testing", function (responseText) {   // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response text...
-          $("#testing").text(responseText);// Locate HTML DOM element with ID "somediv" and set its text content with the response text.
-        });
-      }
-    </script>
+    <script type="text/javascript" src = "js/change.js"></script>
   </head>
   <body>
   <div>
@@ -726,7 +689,7 @@
       </tr>
     </table>
   </div>
-  <div id="somediv">FIRST: X</div>
+  <div id="somediv">PLAYER: X | COMPUTER: O</div>
   <div id="positiondiv"><textarea id="testdiv" rows="20" cols="80"></textarea></div>
   <div id="position" hidden></div>
   </body>
