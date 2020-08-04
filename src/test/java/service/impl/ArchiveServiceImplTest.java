@@ -5,9 +5,9 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class GameServiceImplTest {
+public class ArchiveServiceImplTest {
 
-  private GameServiceImpl gameService = new GameServiceImpl();
+  private ArchiveServiceImpl gameService = new ArchiveServiceImpl();
 
 
   @Test

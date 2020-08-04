@@ -64,8 +64,7 @@ public class ComputerMoveServiceImpl implements ComputerMoveService {
     for (CharPosition possibleMove : reasonableMoves) {
       currentPositionMatrix = Arrays.stream(positionMatrix).map(String[]::clone).toArray(String[][]::new);;
       currentPositionMatrix[possibleMove.getRow()][possibleMove.getColumn()] = playerChar;
-      modelingService.describePosition(currentPositionMatrix);
-      currentEvaluation = evaluatePosition(modelingService.getPositionDto());
+      currentEvaluation = evaluatePosition(modelingService.describePosition(currentPositionMatrix));
       if (currentEvaluation > evaluation) {
         evaluation = currentEvaluation;
         bestMove = possibleMove;

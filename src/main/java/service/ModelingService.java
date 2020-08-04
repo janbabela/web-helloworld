@@ -4,7 +4,7 @@ import dto.PositionDto;
 
 public interface ModelingService {
 
-  void describePosition(String[][] positionMatrix);
+  PositionDto describePosition(String[][] positionMatrix);
 
   PositionDto getPositionDto();
 }

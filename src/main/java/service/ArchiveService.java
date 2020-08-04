@@ -4,9 +4,11 @@ import dto.PositionDto;
 
 import java.util.List;
 
-public interface GameService {
+public interface ArchiveService {
 
   void archivePosition(PositionDto positionDto);
+
+  void archiveGame();
 
   void evaluateGamePositions();
 

@@ -3,12 +3,12 @@
   <head>
     <title>Title</title>
     <link href="css/main.css" rel="stylesheet" type="text/css">
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="js/jquery-latest.min.js"></script>
     <script type="text/javascript" src = "js/change.js"></script>
   </head>
   <body>
   <div>
-    Header
+    TIC TAC TOE
   </div>
   <div>
     <table>
@@ -690,7 +690,9 @@
     </table>
   </div>
   <div id="somediv">PLAYER: X | COMPUTER: O</div>
-  <div id="positiondiv"><textarea id="testdiv" rows="20" cols="80"></textarea></div>
+  <div id="evaluation"></div>
+  <div id="gamemode" hidden></div>
+  <div id="positiondiv" hidden><textarea id="testdiv" rows="20" cols="80"></textarea></div>
   <div id="position" hidden></div>
   </body>
 </html>

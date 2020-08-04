@@ -1,22 +1,31 @@
 package service.impl;
 
+import assembler.PositionAssembler;
+import dao.PositionHistoryDao;
+import dao.impl.PositionsHistoryDaoImpl;
 import dto.PositionDto;
 import lombok.Getter;
 import lombok.Setter;
-import service.GameService;
+import service.ArchiveService;
+import service.ModelingService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
-public class GameServiceImpl implements GameService {
+public class ArchiveServiceImpl implements ArchiveService {
 
   private List<PositionDto> game = new ArrayList<>();
 
   private int currentMove = 1;
 
   private String currentPlayer = "X";
+
+  private ModelingService modelingService = new ModelingServiceImpl();
+
+  private PositionHistoryDao positionHistoryDao = new PositionsHistoryDaoImpl();
+  private PositionAssembler positionAssembler = new PositionAssembler();
 
   public void archivePosition(PositionDto positionDto) {
 
@@ -27,6 +36,11 @@ public class GameServiceImpl implements GameService {
 
     currentMove++;
     currentPlayer = "X".equals(currentPlayer) ? "O" : "X";
+  }
+
+  public void archiveGame() {
+    evaluateGamePositions();
+    positionHistoryDao.insertGame(positionAssembler.extractPositionModels(getGame()));
   }
 
   public void evaluateGamePositions() {

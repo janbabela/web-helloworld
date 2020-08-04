@@ -28,12 +28,13 @@ public class ModelingServiceImpl implements ModelingService {
   private final static String EMPTY = "&nbsp;";
 
   @Override
-  public void describePosition(String[][] positionMatrix) {
+  public PositionDto describePosition(String[][] positionMatrix) {
 
     this.positionMatrix = positionMatrix;
     modelingUtils.positionMatrix = positionMatrix;
     positionDto = new PositionDto();
     countPatterns();
+    return positionDto;
   }
 
   private void countPatterns() {
