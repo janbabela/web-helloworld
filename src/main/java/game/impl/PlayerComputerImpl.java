@@ -5,9 +5,11 @@ import dto.PositionDto;
 import game.GameMode;
 import lombok.Getter;
 import parser.Parser;
+import service.AdvancedMoveService;
 import service.ArchiveService;
 import service.ComputerMoveService;
 import service.ModelingService;
+import service.impl.AdvancedMoveServiceImpl;
 import service.impl.ArchiveServiceImpl;
 import service.impl.ComputerMoveServiceImpl;
 import service.impl.ModelingServiceImpl;
@@ -22,7 +24,9 @@ public class PlayerComputerImpl implements GameMode {
   @Getter
   private double evaluation;
 
-  private final ComputerMoveService computerMoveService = new ComputerMoveServiceImpl("O");
+//  private final ComputerMoveService computerMoveService = new ComputerMoveServiceImpl("O");
+
+  private final AdvancedMoveService computerMoveService = new AdvancedMoveServiceImpl("O");
 
   public CharPosition playMoves(String position) {
 
@@ -43,7 +47,7 @@ public class PlayerComputerImpl implements GameMode {
       return new CharPosition(-1, -1);
     }
 
-    CharPosition nextMove = computerMoveService.makeMove(positionMatrix, "O", archiveService.getGame().size() < 10);
+    CharPosition nextMove = computerMoveService.findBestMoveTwoSteps(positionMatrix, "O", archiveService.getGame().size() < 10);
     positionMatrix[nextMove.getRow()][nextMove.getColumn()] = "O";
     PositionDto lastOPosition = modelingService.describePosition(positionMatrix);
     archiveService.archivePosition(lastOPosition);

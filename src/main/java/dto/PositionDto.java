@@ -253,6 +253,88 @@ public class PositionDto {
     }
   }
 
+  public PositionDto add(PositionDto secondPositionDto) {
+
+    PositionDto result = new PositionDto();
+
+    result.setOOpenDoubles(this.oOpenDoubles + secondPositionDto.getOOpenDoubles());
+    result.setOMostlyOpenDoubles(this.oMostlyOpenDoubles + secondPositionDto.getOMostlyOpenDoubles());
+    result.setOHalfOpenDoubles(this.oHalfOpenDoubles + secondPositionDto.getOHalfOpenDoubles());
+    result.setOOpenDisconnectedDoubles(this.oOpenDisconnectedDoubles + secondPositionDto.getOOpenDisconnectedDoubles());
+    result.setOMostlyOpenDisconnectedDoubles(this.oMostlyOpenDisconnectedDoubles + secondPositionDto.getOMostlyOpenDoubles());
+    result.setOHalfOpenDisconnectedDoubles(this.oHalfOpenDisconnectedDoubles + secondPositionDto.getOHalfOpenDisconnectedDoubles());
+    result.setOOpenTriples(this.oOpenTriples + secondPositionDto.getOOpenTriples());
+    result.setOMostlyOpenTriples(this.oMostlyOpenTriples + secondPositionDto.getOMostlyOpenTriples());
+    result.setOHalfOpenTriples(this.oHalfOpenTriples + secondPositionDto.getOHalfOpenTriples());
+    result.setOOpenDisconnectedTriples(this.oOpenDisconnectedTriples + secondPositionDto.getOOpenDisconnectedTriples());
+    result.setOHalfOpenDisconnectedTriples(this.oHalfOpenDisconnectedTriples + secondPositionDto.getOHalfOpenDisconnectedTriples());
+    result.setOTwiceDisconnectedTriples(this.oTwiceDisconnectedTriples + secondPositionDto.getOTwiceDisconnectedTriples());
+    result.setOOpenQuadruples(this.oOpenQuadruples + secondPositionDto.getOOpenQuadruples());
+    result.setOHalfOpenQuadruples(this.oHalfOpenQuadruples + secondPositionDto.getOHalfOpenQuadruples());
+    result.setODisconnectedQuadruples(this.oDisconnectedQuadruples + secondPositionDto.getODisconnectedQuadruples());
+    result.setOQuintuples(this.oQuintuples + secondPositionDto.getOQuintuples());
+
+    result.setXOpenDoubles(this.xOpenDoubles + secondPositionDto.getXOpenDoubles());
+    result.setXMostlyOpenDoubles(this.xMostlyOpenDoubles + secondPositionDto.getXMostlyOpenDoubles());
+    result.setXHalfOpenDoubles(this.xHalfOpenDoubles + secondPositionDto.getXHalfOpenDoubles());
+    result.setXOpenDisconnectedDoubles(this.xOpenDisconnectedDoubles + secondPositionDto.getXOpenDisconnectedDoubles());
+    result.setXMostlyOpenDisconnectedDoubles(this.xMostlyOpenDisconnectedDoubles + secondPositionDto.getXMostlyOpenDoubles());
+    result.setXHalfOpenDisconnectedDoubles(this.xHalfOpenDisconnectedDoubles + secondPositionDto.getXHalfOpenDisconnectedDoubles());
+    result.setXOpenTriples(this.xOpenTriples + secondPositionDto.getXOpenTriples());
+    result.setXMostlyOpenTriples(this.xMostlyOpenTriples + secondPositionDto.getXMostlyOpenTriples());
+    result.setXHalfOpenTriples(this.xHalfOpenTriples + secondPositionDto.getXHalfOpenTriples());
+    result.setXOpenDisconnectedTriples(this.xOpenDisconnectedTriples + secondPositionDto.getXOpenDisconnectedTriples());
+    result.setXHalfOpenDisconnectedTriples(this.xHalfOpenDisconnectedTriples + secondPositionDto.getXHalfOpenDisconnectedTriples());
+    result.setXTwiceDisconnectedTriples(this.xTwiceDisconnectedTriples + secondPositionDto.getXTwiceDisconnectedTriples());
+    result.setXOpenQuadruples(this.xOpenQuadruples + secondPositionDto.getXOpenQuadruples());
+    result.setXHalfOpenQuadruples(this.xHalfOpenQuadruples + secondPositionDto.getXHalfOpenQuadruples());
+    result.setXDisconnectedQuadruples(this.xDisconnectedQuadruples + secondPositionDto.getXDisconnectedQuadruples());
+    result.setXQuintuples(this.xQuintuples + secondPositionDto.getXQuintuples());
+
+    return result;
+  }
+
+  public PositionDto substract(PositionDto secondPositionDto) {
+
+    PositionDto result = new PositionDto();
+
+    result.setOOpenDoubles(this.oOpenDoubles - secondPositionDto.getOOpenDoubles());
+    result.setOMostlyOpenDoubles(this.oMostlyOpenDoubles - secondPositionDto.getOMostlyOpenDoubles());
+    result.setOHalfOpenDoubles(this.oHalfOpenDoubles - secondPositionDto.getOHalfOpenDoubles());
+    result.setOOpenDisconnectedDoubles(this.oOpenDisconnectedDoubles - secondPositionDto.getOOpenDisconnectedDoubles());
+    result.setOMostlyOpenDisconnectedDoubles(this.oMostlyOpenDisconnectedDoubles - secondPositionDto.getOMostlyOpenDoubles());
+    result.setOHalfOpenDisconnectedDoubles(this.oHalfOpenDisconnectedDoubles - secondPositionDto.getOHalfOpenDisconnectedDoubles());
+    result.setOOpenTriples(this.oOpenTriples - secondPositionDto.getOOpenTriples());
+    result.setOMostlyOpenTriples(this.oMostlyOpenTriples - secondPositionDto.getOMostlyOpenTriples());
+    result.setOHalfOpenTriples(this.oHalfOpenTriples - secondPositionDto.getOHalfOpenTriples());
+    result.setOOpenDisconnectedTriples(this.oOpenDisconnectedTriples - secondPositionDto.getOOpenDisconnectedTriples());
+    result.setOHalfOpenDisconnectedTriples(this.oHalfOpenDisconnectedTriples - secondPositionDto.getOHalfOpenDisconnectedTriples());
+    result.setOTwiceDisconnectedTriples(this.oTwiceDisconnectedTriples - secondPositionDto.getOTwiceDisconnectedTriples());
+    result.setOOpenQuadruples(this.oOpenQuadruples - secondPositionDto.getOOpenQuadruples());
+    result.setOHalfOpenQuadruples(this.oHalfOpenQuadruples - secondPositionDto.getOHalfOpenQuadruples());
+    result.setODisconnectedQuadruples(this.oDisconnectedQuadruples - secondPositionDto.getODisconnectedQuadruples());
+    result.setOQuintuples(this.oQuintuples - secondPositionDto.getOQuintuples());
+
+    result.setXOpenDoubles(this.xOpenDoubles - secondPositionDto.getXOpenDoubles());
+    result.setXMostlyOpenDoubles(this.xMostlyOpenDoubles - secondPositionDto.getXMostlyOpenDoubles());
+    result.setXHalfOpenDoubles(this.xHalfOpenDoubles - secondPositionDto.getXHalfOpenDoubles());
+    result.setXOpenDisconnectedDoubles(this.xOpenDisconnectedDoubles - secondPositionDto.getXOpenDisconnectedDoubles());
+    result.setXMostlyOpenDisconnectedDoubles(this.xMostlyOpenDisconnectedDoubles - secondPositionDto.getXMostlyOpenDoubles());
+    result.setXHalfOpenDisconnectedDoubles(this.xHalfOpenDisconnectedDoubles - secondPositionDto.getXHalfOpenDisconnectedDoubles());
+    result.setXOpenTriples(this.xOpenTriples - secondPositionDto.getXOpenTriples());
+    result.setXMostlyOpenTriples(this.xMostlyOpenTriples - secondPositionDto.getXMostlyOpenTriples());
+    result.setXHalfOpenTriples(this.xHalfOpenTriples - secondPositionDto.getXHalfOpenTriples());
+    result.setXOpenDisconnectedTriples(this.xOpenDisconnectedTriples - secondPositionDto.getXOpenDisconnectedTriples());
+    result.setXHalfOpenDisconnectedTriples(this.xHalfOpenDisconnectedTriples - secondPositionDto.getXHalfOpenDisconnectedTriples());
+    result.setXTwiceDisconnectedTriples(this.xTwiceDisconnectedTriples - secondPositionDto.getXTwiceDisconnectedTriples());
+    result.setXOpenQuadruples(this.xOpenQuadruples - secondPositionDto.getXOpenQuadruples());
+    result.setXHalfOpenQuadruples(this.xHalfOpenQuadruples - secondPositionDto.getXHalfOpenQuadruples());
+    result.setXDisconnectedQuadruples(this.xDisconnectedQuadruples - secondPositionDto.getXDisconnectedQuadruples());
+    result.setXQuintuples(this.xQuintuples - secondPositionDto.getXQuintuples());
+
+    return result;
+  }
+  
   public String toString() {
     StringBuilder sb = new StringBuilder("PositionModel" );
     sb.append(System.getProperty("line.separator"));
@@ -294,5 +376,39 @@ public class PositionDto {
 
     return sb.toString();
   }
-
+  
+  public boolean equals(PositionDto other) {
+    return (this.getOOpenDoubles() == other.getOOpenDoubles() && 
+            this.getOHalfOpenDoubles() == other.getOHalfOpenDoubles() &&
+            this.getOMostlyOpenDoubles() == other.getOMostlyOpenDoubles() &&
+            this.getOOpenDisconnectedDoubles() == other.getOOpenDisconnectedDoubles() &&
+            this.getOHalfOpenDisconnectedDoubles() == other.getOHalfOpenDisconnectedDoubles() &&
+            this.getOMostlyOpenDisconnectedDoubles() == other.getOMostlyOpenDisconnectedDoubles() &&
+            this.getOOpenTriples() == other.getOOpenTriples() &&
+            this.getOMostlyOpenTriples() == other.getOMostlyOpenTriples() &&
+            this.getOHalfOpenTriples() == other.getOHalfOpenTriples() &&
+            this.getOOpenDisconnectedTriples() == other.getOOpenDisconnectedTriples() &&
+            this.getOHalfOpenDisconnectedTriples() == other.getOHalfOpenDisconnectedTriples() &&
+            this.getOTwiceDisconnectedTriples() == other.getOTwiceDisconnectedTriples() &&
+            this.getOOpenQuadruples() == other.getOOpenQuadruples() &&
+            this.getOHalfOpenQuadruples() == other.getOHalfOpenQuadruples() &&
+            this.getODisconnectedQuadruples() == other.getODisconnectedQuadruples() &&
+            this.getOQuintuples() == other.getOQuintuples() &&
+            this.getXOpenDoubles() == other.getXOpenDoubles() &&
+            this.getXHalfOpenDoubles() == other.getXHalfOpenDoubles() &&
+            this.getXMostlyOpenDoubles() == other.getXMostlyOpenDoubles() &&
+            this.getXOpenDisconnectedDoubles() == other.getXOpenDisconnectedDoubles() &&
+            this.getXHalfOpenDisconnectedDoubles() == other.getXHalfOpenDisconnectedDoubles() &&
+            this.getXMostlyOpenDisconnectedDoubles() == other.getXMostlyOpenDisconnectedDoubles() &&
+            this.getXOpenTriples() == other.getXOpenTriples() &&
+            this.getXMostlyOpenTriples() == other.getXMostlyOpenTriples() &&
+            this.getXHalfOpenTriples() == other.getXHalfOpenTriples() &&
+            this.getXOpenDisconnectedTriples() == other.getXOpenDisconnectedTriples() &&
+            this.getXHalfOpenDisconnectedTriples() == other.getXHalfOpenDisconnectedTriples() &&
+            this.getXTwiceDisconnectedTriples() == other.getXTwiceDisconnectedTriples() &&
+            this.getXOpenQuadruples() == other.getXOpenQuadruples() &&
+            this.getXHalfOpenQuadruples() == other.getXHalfOpenQuadruples() &&
+            this.getXDisconnectedQuadruples() == other.getXDisconnectedQuadruples() &&
+            this.getXQuintuples() == other.getXQuintuples());
+  }
 }

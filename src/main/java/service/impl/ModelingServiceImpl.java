@@ -1,9 +1,9 @@
 package service.impl;
 
-import lombok.Getter;
-import lombok.Setter;
 import dto.CharPosition;
 import dto.PositionDto;
+import lombok.Getter;
+import lombok.Setter;
 import service.ModelingService;
 
 import java.util.Arrays;
@@ -37,25 +37,88 @@ public class ModelingServiceImpl implements ModelingService {
     return positionDto;
   }
 
-  private void countPatterns() {
+  public PositionDto fastDescribePosition(String[][] positionMatrix, PositionDto previousPositionDto, CharPosition nextMove, String playerChar) {
 
+    String[][] positionMatrixCloned = Arrays.stream(positionMatrix).map(String[]::clone).toArray(String[][]::new);
+
+    PositionDto previousLimitedDto = limitedDescribePosition(positionMatrixCloned, nextMove);
+    positionMatrixCloned[nextMove.getRow()][nextMove.getColumn()] = playerChar;
+    PositionDto nextLimitedDto = limitedDescribePosition(positionMatrixCloned, nextMove);
+
+    return previousPositionDto.add(nextLimitedDto.substract(previousLimitedDto));
+  }
+
+  private PositionDto limitedDescribePosition(String[][] positionMatrix, CharPosition change) {
+
+    String[][] positionMatrixCloned = Arrays.stream(positionMatrix).map(String[]::clone).toArray(String[][]::new);
+
+    this.positionMatrix = positionMatrixCloned;
+    modelingUtils.positionMatrix = positionMatrixCloned;
+    positionDto = new PositionDto();
+
+    CharPosition charPosition;
+    for (int rowIndex=0; rowIndex<25; rowIndex++) {
+      charPosition = new CharPosition(rowIndex, change.getColumn());
+      countPatternsForPositionForPositionType(charPosition, COLUMN);
+    }
+    for (int columnIndex=0; columnIndex<25; columnIndex++) {
+      charPosition = new CharPosition(change.getRow(), columnIndex);
+      countPatternsForPositionForPositionType(charPosition, ROW);
+    }
+    for (int firstDiagonalIndex=-24; firstDiagonalIndex<25; firstDiagonalIndex++) {
+      if (change.getRow() + firstDiagonalIndex > -1 && change.getRow() + firstDiagonalIndex <25
+              && change.getColumn() + firstDiagonalIndex >-1 && change.getColumn() + firstDiagonalIndex <25) {
+        charPosition = new CharPosition(change.getRow() + firstDiagonalIndex, change.getColumn() + firstDiagonalIndex);
+        countPatternsForPositionForPositionType(charPosition, FIRST_DIAGONAL);
+      }
+    }
+    for (int secondDiagonalIndex=-24; secondDiagonalIndex<25; secondDiagonalIndex++) {
+      if (change.getRow() - secondDiagonalIndex > -1 && change.getRow() - secondDiagonalIndex <25
+              && change.getColumn() + secondDiagonalIndex >-1 && change.getColumn() + secondDiagonalIndex <25) {
+        charPosition = new CharPosition(change.getRow() - secondDiagonalIndex, change.getColumn() + secondDiagonalIndex);
+        countPatternsForPositionForPositionType(charPosition, SECOND_DIAGONAL);
+      }
+    }
+    return positionDto;
+  }
+
+  private void countPatterns() {
     for (int rowIndex=0; rowIndex<25; rowIndex++) {
       for (int columnIndex = 0; columnIndex < 25; columnIndex++) {
         CharPosition charPosition = new CharPosition(rowIndex, columnIndex);
-        positionTypes.forEach(t -> checkDoubleForPositionForPlayerForPositionType(charPosition, "O", t) );
-        positionTypes.forEach(t -> checkDisconnectedDoubleForPositionForPlayerForPositionType(charPosition, "O", t) );
-        positionTypes.forEach(t -> checkDoubleForPositionForPlayerForPositionType(charPosition, "X", t) );
-        positionTypes.forEach(t -> checkDisconnectedDoubleForPositionForPlayerForPositionType(charPosition, "X", t) );
-        positionTypes.forEach(t -> checkTripleForPositionForPlayerForPositionType(charPosition, "O", t) );
-        positionTypes.forEach(t -> checkDisconnectedTripleForPositionForPlayerForPositionType(charPosition, "O", t) );
-        positionTypes.forEach(t -> checkTripleForPositionForPlayerForPositionType(charPosition, "X", t) );
-        positionTypes.forEach(t -> checkDisconnectedTripleForPositionForPlayerForPositionType(charPosition, "X", t) );
-        positionTypes.forEach(t -> checkQuadrupleForPositionForPlayerForPositionType(charPosition, "O", t) );
-        positionTypes.forEach(t -> checkQuadrupleForPositionForPlayerForPositionType(charPosition, "X", t) );
-        positionTypes.forEach(t -> checkQuintupleForPositionForPlayerForPositionType(charPosition, "O", t) );
-        positionTypes.forEach(t -> checkQuintupleForPositionForPlayerForPositionType(charPosition, "X", t) );
+        countPatternsForPosition(charPosition);
       }
     }
+  }
+
+  private void countPatternsForPosition(CharPosition charPosition) {
+    positionTypes.forEach(t -> checkDoubleForPositionForPlayerForPositionType(charPosition, "O", t) );
+    positionTypes.forEach(t -> checkDisconnectedDoubleForPositionForPlayerForPositionType(charPosition, "O", t) );
+    positionTypes.forEach(t -> checkDoubleForPositionForPlayerForPositionType(charPosition, "X", t) );
+    positionTypes.forEach(t -> checkDisconnectedDoubleForPositionForPlayerForPositionType(charPosition, "X", t) );
+    positionTypes.forEach(t -> checkTripleForPositionForPlayerForPositionType(charPosition, "O", t) );
+    positionTypes.forEach(t -> checkDisconnectedTripleForPositionForPlayerForPositionType(charPosition, "O", t) );
+    positionTypes.forEach(t -> checkTripleForPositionForPlayerForPositionType(charPosition, "X", t) );
+    positionTypes.forEach(t -> checkDisconnectedTripleForPositionForPlayerForPositionType(charPosition, "X", t) );
+    positionTypes.forEach(t -> checkQuadrupleForPositionForPlayerForPositionType(charPosition, "O", t) );
+    positionTypes.forEach(t -> checkQuadrupleForPositionForPlayerForPositionType(charPosition, "X", t) );
+    positionTypes.forEach(t -> checkQuintupleForPositionForPlayerForPositionType(charPosition, "O", t) );
+    positionTypes.forEach(t -> checkQuintupleForPositionForPlayerForPositionType(charPosition, "X", t) );
+  }
+
+  private void countPatternsForPositionForPositionType(CharPosition charPosition, String positionType) {
+    checkDoubleForPositionForPlayerForPositionType(charPosition, "O", positionType);
+    checkDisconnectedDoubleForPositionForPlayerForPositionType(charPosition, "O", positionType);
+    checkDoubleForPositionForPlayerForPositionType(charPosition, "X", positionType);
+    checkDisconnectedDoubleForPositionForPlayerForPositionType(charPosition, "X", positionType);
+    checkTripleForPositionForPlayerForPositionType(charPosition, "O", positionType);
+    checkDisconnectedTripleForPositionForPlayerForPositionType(charPosition, "O", positionType);
+    checkTripleForPositionForPlayerForPositionType(charPosition, "X", positionType);
+    checkDisconnectedTripleForPositionForPlayerForPositionType(charPosition, "X", positionType);
+    checkQuadrupleForPositionForPlayerForPositionType(charPosition, "O", positionType);
+    checkQuadrupleForPositionForPlayerForPositionType(charPosition, "X", positionType);
+    checkQuintupleForPositionForPlayerForPositionType(charPosition, "O", positionType);
+    checkQuintupleForPositionForPlayerForPositionType(charPosition, "X", positionType);
   }
   
   private void checkDoubleForPositionForPlayerForPositionType(CharPosition charPosition, String playerChar, String positionType) {
@@ -178,4 +241,33 @@ public class ModelingServiceImpl implements ModelingService {
     }
   }
 
+  public static void main(String[] args) {
+    String[][] testPositionMatrix = new String[25][25];
+    for (int i=0; i<25; i++) {
+      for (int j=0; j<25; j++) {
+        testPositionMatrix[i][j] = "&nbsp;";
+      }
+    }
+    testPositionMatrix[12][12] = "X";
+    testPositionMatrix[12][13] = "O";
+    testPositionMatrix[13][12] = "X";
+    testPositionMatrix[11][12] = "O";
+    testPositionMatrix[14][12] = "X";
+    testPositionMatrix[10][11] = "O";
+    testPositionMatrix[13][13] = "X";
+    testPositionMatrix[13][14] = "O";
+    testPositionMatrix[14][15] = "X";
+
+    ModelingServiceImpl modelingService = new ModelingServiceImpl();
+
+    PositionDto previousPositionDto = modelingService.describePosition(testPositionMatrix);
+    PositionDto testedPositionDto = modelingService.fastDescribePosition(testPositionMatrix, previousPositionDto,new CharPosition(9,10), "O");
+
+    testPositionMatrix[9][10] = "O";
+    PositionDto expectedPositionDto = modelingService.describePosition(testPositionMatrix);
+
+    System.out.println(expectedPositionDto);
+    System.out.println("*************************************************************************************");
+    System.out.println(testedPositionDto);
+  }
 }

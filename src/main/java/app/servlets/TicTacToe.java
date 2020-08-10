@@ -6,7 +6,6 @@ import game.impl.ComputerComputerImpl;
 import game.impl.PlayerComputerImpl;
 import game.impl.PlayerPlayerImpl;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ public class TicTacToe extends HttpServlet {
   GameMode gameMode = new PlayerComputerImpl();
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     String gameModeId;
     CharPosition nextMove = gameMode.playMoves(request.getParameter("position"));

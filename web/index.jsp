@@ -692,7 +692,8 @@
   <div id="somediv">PLAYER: X | COMPUTER: O</div>
   <div id="evaluation"></div>
   <div id="gamemode" hidden></div>
-  <div id="positiondiv" hidden><textarea id="testdiv" rows="20" cols="80"></textarea></div>
+  <div id="positiondiv"><textarea id="testdiv" rows="20" cols="80"></textarea></div>
   <div id="position" hidden></div>
+  <div id="next" hidden>X</div>
   </body>
 </html>

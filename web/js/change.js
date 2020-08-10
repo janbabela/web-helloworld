@@ -1,19 +1,26 @@
 function change(rNo, cNo) {
 
-    if (!checkGameOver()) {
-        var charToWrite = document.getElementById("somediv").innerHTML.substring(8, 9);
+    var next = document.getElementById("next").innerHTML;
+    if (next == "X") {
+        if (!checkGameOver()) {
+            var charToWrite = document.getElementById("somediv").innerHTML.substring(8, 9);
 
-        var currentButton = document.getElementById("idr" + rNo + "c" + cNo);
-        if (currentButton.innerHTML == "&nbsp;") {
-            if (getGameMode() != "3") {
-                currentButton.innerHTML = charToWrite;
-            }
-            $.post("position", {
-                    position: JSON.stringify(getPosition())
-                }, function (response, status) {
-                    handleResponse(response);
+            var currentButton = document.getElementById("idr" + rNo + "c" + cNo);
+            if (currentButton.innerHTML == "&nbsp;") {
+                if (getGameMode() != "3") {
+                    setDefaultTableStyle();
+                    currentButton.innerHTML = charToWrite;
+                    currentButton.classList.remove("button");
+                    currentButton.classList.add("highlightedButton");
                 }
-            );
+                document.getElementById("next").innerHTML = "O";
+                $.post("position", {
+                        position: JSON.stringify(getPosition())
+                    }, function (response, status) {
+                        handleResponse(response);
+                    }
+                );
+            }
         }
     }
 }
@@ -32,7 +39,8 @@ function handleResponse(response) {
             displayMove(response, playerChar);
         }
         $("#testdiv").text(response);
-        }
+        document.getElementById("next").innerHTML = "X";
+    }
 }
 function displayMove(response, playerChar) {
     var responseSubstring = response.substring(4);
@@ -49,7 +57,10 @@ function displayMove(response, playerChar) {
         evaluation = next.substring(11,16);
     }
     if (row > -1 && column > -1 ) {
+        setDefaultTableStyle();
         document.getElementById("idr" + row + "c" + column).innerHTML = playerChar;
+        document.getElementById("idr" + row + "c" + column).classList.remove("button");
+        document.getElementById("idr" + row + "c" + column).classList.add("highlightedButton");
     }
     document.getElementById("evaluation").innerHTML = "Evaluation: " + evaluation;
     if (evaluation == -1.0) {
@@ -91,4 +102,12 @@ function getPosition() {
         }
     }
     return position;
+}
+function setDefaultTableStyle() {
+    for (var r = 1; r < 26; r++) {
+        for (var c = 1; c < 26; c++) {
+            document.getElementById("idr" + r + "c" + c).classList.remove("highlightedButton");
+            document.getElementById("idr" + r + "c" + c).classList.add("button");
+        }
+    }
 }
