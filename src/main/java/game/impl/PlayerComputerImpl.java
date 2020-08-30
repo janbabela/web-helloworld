@@ -30,17 +30,12 @@ public class PlayerComputerImpl implements GameMode {
 
   public CharPosition playMoves(String position) {
 
-    if (gameOver) {
-      evaluation = -1;
-      return new CharPosition(-1,-1);
-    }
-
     String[][] positionMatrix = parser.parseAll(position);
 
     PositionDto lastXPosition = modelingService.describePosition(positionMatrix);
     archiveService.archivePosition(lastXPosition);
 
-    if (lastXPosition.getXQuintuples() > 0) {
+    if (lastXPosition.getXQuintuples() > 0 || lastXPosition.getOQuintuples() > 0 ) {
       gameOver();
       return new CharPosition(-1, -1);
     }
@@ -69,7 +64,7 @@ public class PlayerComputerImpl implements GameMode {
 
   private void gameOver() {
     archiveService.archiveGame();
-    gameOver = true;
+//    gameOver = true;
     evaluation = -1;
   }
 }
