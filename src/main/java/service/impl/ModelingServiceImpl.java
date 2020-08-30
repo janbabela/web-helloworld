@@ -37,6 +37,7 @@ public class ModelingServiceImpl implements ModelingService {
     return positionDto;
   }
 
+  @Override
   public PositionDto fastDescribePosition(String[][] positionMatrix, PositionDto previousPositionDto, CharPosition nextMove, String playerChar) {
 
     String[][] positionMatrixCloned = Arrays.stream(positionMatrix).map(String[]::clone).toArray(String[][]::new);
@@ -48,6 +49,21 @@ public class ModelingServiceImpl implements ModelingService {
     return previousPositionDto.add(nextLimitedDto.substract(previousLimitedDto));
   }
 
+  @Override
+  public boolean isStartOfGame(String[][] positionMatrix) {
+
+    int numberOfChars = 0;
+
+    for (int i =0; i<25; i++) {
+      for (int j=0; j<25; j++) {
+        if ("X".equals(positionMatrix[i][j]) || "O".equals(positionMatrix[i][j])) {
+          numberOfChars++;
+        }
+      }
+    }
+    return numberOfChars <= 10;
+  }
+
   private PositionDto limitedDescribePosition(String[][] positionMatrix, CharPosition change) {
 
     String[][] positionMatrixCloned = Arrays.stream(positionMatrix).map(String[]::clone).toArray(String[][]::new);
@@ -56,25 +72,30 @@ public class ModelingServiceImpl implements ModelingService {
     modelingUtils.positionMatrix = positionMatrixCloned;
     positionDto = new PositionDto();
 
+    int rowStart  = Math.max((change.getRow() - 6), 0);
+    int rowEnd = Math.min(change.getRow()+6, 24);
+    int columnStart = Math.max((change.getColumn() - 6), 0);
+    int columnEnd = Math.min(change.getColumn()+6, 24);
+
     CharPosition charPosition;
-    for (int rowIndex=0; rowIndex<25; rowIndex++) {
+    for (int rowIndex=rowStart; rowIndex<=rowEnd; rowIndex++) {
       charPosition = new CharPosition(rowIndex, change.getColumn());
       countPatternsForPositionForPositionType(charPosition, COLUMN);
     }
-    for (int columnIndex=0; columnIndex<25; columnIndex++) {
+    for (int columnIndex=columnStart; columnIndex<=columnEnd; columnIndex++) {
       charPosition = new CharPosition(change.getRow(), columnIndex);
       countPatternsForPositionForPositionType(charPosition, ROW);
     }
     for (int firstDiagonalIndex=-24; firstDiagonalIndex<25; firstDiagonalIndex++) {
-      if (change.getRow() + firstDiagonalIndex > -1 && change.getRow() + firstDiagonalIndex <25
-              && change.getColumn() + firstDiagonalIndex >-1 && change.getColumn() + firstDiagonalIndex <25) {
+      if (change.getRow() + firstDiagonalIndex >= rowStart && change.getRow() + firstDiagonalIndex <= rowEnd
+              && change.getColumn() + firstDiagonalIndex >= columnStart && change.getColumn() + firstDiagonalIndex <= columnEnd) {
         charPosition = new CharPosition(change.getRow() + firstDiagonalIndex, change.getColumn() + firstDiagonalIndex);
         countPatternsForPositionForPositionType(charPosition, FIRST_DIAGONAL);
       }
     }
     for (int secondDiagonalIndex=-24; secondDiagonalIndex<25; secondDiagonalIndex++) {
-      if (change.getRow() - secondDiagonalIndex > -1 && change.getRow() - secondDiagonalIndex <25
-              && change.getColumn() + secondDiagonalIndex >-1 && change.getColumn() + secondDiagonalIndex <25) {
+      if (change.getRow() - secondDiagonalIndex >= rowStart && change.getRow() - secondDiagonalIndex <= rowEnd
+              && change.getColumn() + secondDiagonalIndex >= columnStart && change.getColumn() + secondDiagonalIndex <= columnEnd) {
         charPosition = new CharPosition(change.getRow() - secondDiagonalIndex, change.getColumn() + secondDiagonalIndex);
         countPatternsForPositionForPositionType(charPosition, SECOND_DIAGONAL);
       }
