@@ -40,7 +40,7 @@ public class ArchiveServiceImpl implements ArchiveService {
 
   public void archiveGame() {
     evaluateGamePositions();
-    positionHistoryDao.insertGame(positionAssembler.extractPositionModels(getGame()));
+//    positionHistoryDao.insertGame(positionAssembler.extractPositionModels(getGame()));
   }
 
   public void evaluateGamePositions() {

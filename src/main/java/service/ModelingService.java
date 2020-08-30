@@ -9,5 +9,7 @@ public interface ModelingService {
 
   PositionDto fastDescribePosition(String[][] positionMatrix, PositionDto previousPositionDto, CharPosition nextMove, String playerChar);
 
+  boolean isStartOfGame(String[][] positionMatrix);
+
   PositionDto getPositionDto();
 }

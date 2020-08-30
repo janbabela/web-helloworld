@@ -47,14 +47,17 @@ public class AdvancedMoveServiceImpl implements AdvancedMoveService {
   }
 
   private void initialize(String playerChar) {
-    List<PositionModel> positionsHistory = positionHistoryDao.selectAll();
+//    List<PositionModel> positionsHistory = positionHistoryDao.selectAll();
+//
+//    double[][] xVariable = regressionService.createXVariable(positionsHistory,playerChar);
+//    double[][] xOpponentVariable = regressionService.createXVariable(positionsHistory,opponentChar(playerChar));
+//    double[] yVariable = regressionService.createYVariable(positionsHistory);
+//
+//    coefficients = regressionService.computeCoefficientLeastSquare(xVariable, yVariable);
+//    opponetCoefficients = regressionService.computeCoefficientLeastSquare(xOpponentVariable,yVariable);
 
-    double[][] xVariable = regressionService.createXVariable(positionsHistory,playerChar);
-    double[][] xOpponentVariable = regressionService.createXVariable(positionsHistory,opponentChar(playerChar));
-    double[] yVariable = regressionService.createYVariable(positionsHistory);
-
-    coefficients = regressionService.computeCoefficientLeastSquare(xVariable, yVariable);
-    opponetCoefficients = regressionService.computeCoefficientLeastSquare(xOpponentVariable,yVariable);
+    coefficients = new double[]{0.06040877658953314, 0.01, 0.04014185284923225, 0.011848964877011623, 0.20789681940824425, 0.13373749742401314, 0.930336194121812, 1.1056658648405884, 0.19239586948319223, 0.7907267078199135, 0.10252111824864779, -0.4649595771946658, 4.5681043956512015, 1.1321015709930127, 1.3498615726449659, 9.146599432822505, -0.2904364059473856, -0.20159002241917154, -0.0905261351840537, -0.23790104554204364, -0.3481087454919055, -0.05558481396002165, -1.577110602993967, -1.4715853792716265, -0.25352292181230085, -1.5257433264522848, -0.3612177349706116, 0.30820060255464476, -5.727312905607902, -5.637271651064736, -2.851288222838949, -5.509683018502952};
+    opponetCoefficients = new double[]{-0.29043640594738585, -0.20159002241916796, -0.09052613518405364, -0.23790104554204358, -0.34810874549190474, -0.055584813960021545, -1.5771106029939663, -1.471585379271626, -0.25352292181230085, -1.5257433264522828, -0.3612177349706119, 0.3082006025546452, -5.727312905607898, -5.63727165106473, -2.8512882228389436, -5.509683018502953, 0.06040877658953299, -0.0417947134391316, 0.04014185284923201, -0.011848964877011828, 0.20789681940824428, 0.1337374974240132, 0.9303361941218113, 1.105665864840589, 0.19239586948319223, 0.7907267078199137, 0.1025211182486475, -0.46495957719466663, 4.568104395651199, 1.132101570993013, 1.3498615726449654, 9.146599432822505};
   }
 
   public CharPosition findBestMoveTwoSteps(String[][] positionMatrix, String playerChar, boolean startOfGame) {

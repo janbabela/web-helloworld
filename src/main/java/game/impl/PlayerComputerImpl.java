@@ -41,21 +41,17 @@ public class PlayerComputerImpl implements GameMode {
     archiveService.archivePosition(lastXPosition);
 
     if (lastXPosition.getXQuintuples() > 0) {
-      archiveService.archiveGame();
-      gameOver = true;
-      evaluation = -1;
+      gameOver();
       return new CharPosition(-1, -1);
     }
 
-    CharPosition nextMove = computerMoveService.findBestMoveTwoSteps(positionMatrix, "O", archiveService.getGame().size() < 10);
+    CharPosition nextMove = computerMoveService.findBestMoveTwoSteps(positionMatrix, "O", modelingService.isStartOfGame(positionMatrix));
     positionMatrix[nextMove.getRow()][nextMove.getColumn()] = "O";
     PositionDto lastOPosition = modelingService.describePosition(positionMatrix);
     archiveService.archivePosition(lastOPosition);
 
     if (lastOPosition.getOQuintuples() > 0) {
-      archiveService.archiveGame();
-      gameOver = true;
-      evaluation = -1;
+      gameOver();
     }
     else {
       evaluation = computerMoveService.getEvaluation();
@@ -69,5 +65,11 @@ public class PlayerComputerImpl implements GameMode {
   private void transformToJSTable(CharPosition nextMove) {
     nextMove.setRow(nextMove.getRow() + 1);
     nextMove.setColumn(nextMove.getColumn() + 1);
+  }
+
+  private void gameOver() {
+    archiveService.archiveGame();
+    gameOver = true;
+    evaluation = -1;
   }
 }
